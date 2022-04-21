@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Glocomx.Models
+{
+    public class Schedule
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string LiveSessionId { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public string Description { get; set; }
+        public ICollection<Tags> Tags { get; set; }
+
+        public string HostId { get; set; }
+
+        public Schedule()
+        {
+            this.LiveSessionId = Guid.NewGuid().ToString();
+            this.Tags = new List<Tags>();
+        }
+    }
+}
