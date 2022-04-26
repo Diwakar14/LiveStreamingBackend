@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Glocomx.Migrations
 {
     [DbContext(typeof(GlocomxDbContext))]
-    [Migration("20220417171356_Removed my users")]
-    partial class Removedmyusers
+    [Migration("20220425154244_Initial Migrations")]
+    partial class InitialMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -86,6 +86,29 @@ namespace Glocomx.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Glocomx.Models.Chat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StreamId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Chats");
+                });
+
             modelBuilder.Entity("Glocomx.Models.Schedule", b =>
                 {
                     b.Property<int>("Id")
@@ -98,6 +121,9 @@ namespace Glocomx.Migrations
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("HostId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LiveSessionId")
                         .HasColumnType("nvarchar(max)");
@@ -262,6 +288,15 @@ namespace Glocomx.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Glocomx.Models.Chat", b =>
+                {
+                    b.HasOne("Glocomx.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Glocomx.Models.Tags", b =>

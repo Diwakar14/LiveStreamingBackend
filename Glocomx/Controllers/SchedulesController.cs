@@ -25,7 +25,7 @@ namespace Glocomx.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedules()
         {
-            return await _context.Schedules.ToListAsync();
+            return await _context.Schedules.Include(tags => tags.Tags).ToListAsync();
         }
 
         // GET: api/Schedules/5

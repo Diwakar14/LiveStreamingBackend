@@ -36,7 +36,7 @@ namespace Glocomx.Controllers
         [Route("Login")]
         public async Task<IActionResult> Post([FromBody] LoginDTO model)
         {
-            var user = await userManager.FindByNameAsync(model.Username);
+            var user = await userManager.FindByEmailAsync(model.Email);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
                 var userRoles = await userManager.GetRolesAsync(user);
@@ -78,16 +78,25 @@ namespace Glocomx.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterDTO model)
         {
-            var userExists = await userManager.FindByNameAsync(model.Username);
+            var userExists = await userManager.FindByNameAsync(model.Email);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User already exists!" });
+
+
+            
 
             ApplicationUser user = new ApplicationUser()
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
+                FirstName = model.Username.Split(' ')[0],
+                LastName = model.Username.Split(' ')[1],
+                UserName = model.Username.Split(" ")[0]
             };
+
+            
+
+            //var role = await this.userManager.AddToRoleAsync(user, model.Role);
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
