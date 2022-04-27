@@ -33,9 +33,9 @@ namespace Glocomx.Controllers
         public async Task<ActionResult<ScheduleReponseDTO>> GetSchedule(int id)
         {
             var schedule = await _context.Schedules.Include(tag => tag.Tags).FirstOrDefaultAsync(i => i.Id == id);
-            var user = await _context.Users.FindAsync(schedule.HostId);
+            var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == schedule.HostId);
 
-            if (schedule == null)
+            if (schedule == null || user == null)
             {
                 return NotFound();
             }
