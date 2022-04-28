@@ -77,6 +77,41 @@ namespace Glocomx
             var serialized = JsonSerializer.Serialize(newMessage);
             await Clients.Group(roomId).SendAsync("onRtcMessage", serialized);
         }
-        
+
+        public async Task SendOffer(string connectionId, string roomId, object message)
+        {
+            var newMessage = new
+            {
+                connectionId,
+                message
+            };
+            var serialized = JsonSerializer.Serialize(newMessage);
+            await Clients.Group(roomId).SendAsync("onSendOffer", serialized);
+        }
+
+        public async Task SendAnswer(string connectionId, string roomId, object message)
+        {
+            var newMessage = new
+            {
+                connectionId,
+                message
+            };
+            var serialized = JsonSerializer.Serialize(newMessage);
+            await Clients.Group(roomId).SendAsync("onAnswer", serialized);
+        }
+
+        public async Task SendCandidate(string connectionId, string roomId, object message)
+        {
+            var newMessage = new
+            {
+                connectionId,
+                message
+            };
+            var serialized = JsonSerializer.Serialize(newMessage);
+            await Clients.Group(roomId).SendAsync("onCandidate", serialized);
+        }
+
+
+
     }
 }
