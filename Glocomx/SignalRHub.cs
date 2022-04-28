@@ -86,7 +86,7 @@ namespace Glocomx
                 message
             };
             var serialized = JsonSerializer.Serialize(newMessage);
-            await Clients.Group(roomId).SendAsync("onSendOffer", serialized);
+            await Clients.Group(roomId).SendAsync("onOffer", serialized);
         }
 
         public async Task SendAnswer(string connectionId, string roomId, object message)
