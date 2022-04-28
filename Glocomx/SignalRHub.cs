@@ -29,7 +29,7 @@ namespace Glocomx
             
             Count++;
             await base.OnConnectedAsync();
-            await Clients.Group(roomId.ToString()).SendAsync("onConnectionChange", Count, roomId.ToString());
+            await Clients.Group(roomId.ToString()).SendAsync("onConnected", Context.ConnectionId);
         }
 
         public async override Task OnDisconnectedAsync(Exception exception)
@@ -42,7 +42,7 @@ namespace Glocomx
 
             Count--;
             await base.OnDisconnectedAsync(exception);
-            await Clients.Group(roomId.ToString()).SendAsync("onConnectionChange", Count, roomId.ToString());
+            await Clients.Group(roomId.ToString()).SendAsync("onDisconnected", Context.ConnectionId);
         }
 
 
@@ -66,9 +66,16 @@ namespace Glocomx
 
         }
 
-        public async Task SendRtcMessage(string roomId, object message)
+        public async Task SendRtcMessage(string connectionId, string roomId, object message)
         {
-            await Clients.Group(roomId).SendAsync("onRtcMessage", message);
+            var newMessage = new
+            {
+                connectionId,
+                message
+            };
+
+            var serialized = JsonSerializer.Serialize(newMessage);
+            await Clients.Group(roomId).SendAsync("onRtcMessage", serialized);
         }
         
     }
