@@ -90,7 +90,7 @@ namespace Glocomx
             await Clients.Group(roomId).SendAsync("onAnswer", serialized);
         }
 
-        public async Task SendCandidate(string connectionId, string roomId, object message)
+        public async Task SendCandidate2Host(string connectionId, string roomId, object message)
         {
             var newMessage = new
             {
@@ -98,12 +98,19 @@ namespace Glocomx
                 message
             };
             var serialized = JsonSerializer.Serialize(newMessage);
-            await Clients.Group(roomId).SendAsync("onCandidate", serialized);
+            await Clients.Group(roomId).SendAsync("onPeerCandidate", serialized);
         }
 
-       
-
-
+        public async Task SendCandidate2Peer(string connectionId, string roomId, object message)
+        {
+            var newMessage = new
+            {
+                connectionId,
+                message
+            };
+            var serialized = JsonSerializer.Serialize(newMessage);
+            await Clients.Group(roomId).SendAsync("onHostCandidate", serialized);
+        }
 
     }
 }
