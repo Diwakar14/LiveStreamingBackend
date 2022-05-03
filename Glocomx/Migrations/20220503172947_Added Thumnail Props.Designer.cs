@@ -4,14 +4,16 @@ using Glocomx;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Glocomx.Migrations
 {
     [DbContext(typeof(GlocomxDbContext))]
-    partial class GlocomxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220503172947_Added Thumnail Props")]
+    partial class AddedThumnailProps
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

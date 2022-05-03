@@ -60,13 +60,15 @@ namespace Glocomx.Controllers
                     expires: DateTime.Now.AddHours(3),
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                    );
+                );
 
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     userId = user.Id,
-                    username = user.UserName,
+                    firstName = user.FirstName,
+                    lastName = user.LastName,
+                    profilePic = user.ProfilePic,
                     email = user.Email,
                     expiration = token.ValidTo
                 });
@@ -83,24 +85,38 @@ namespace Glocomx.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User already exists!" });
 
 
-            
-
             ApplicationUser user = new ApplicationUser()
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                FirstName = model.Username.Split(' ')[0],
-                LastName = model.Username.Split(' ')[1],
-                UserName = model.Username.Split(" ")[0]
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                UserName = model.FirstName +model.LastName
             };
 
-            
+            bool adminRoleExists = await roleManager.RoleExistsAsync(model.Role);
+            if (!adminRoleExists)
+            {
+                var newRole = await roleManager.CreateAsync(new IdentityRole(model.Role));
+                if (newRole.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, model.Role);
+                }
+            }
+          
 
-            //var role = await this.userManager.AddToRoleAsync(user, model.Role);
-            var result = await userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-
+            try
+            {
+                var result = await userManager.CreateAsync(user, model.Password);
+                //if (!result.Succeeded)
+                //    return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = ex.Message});
+            }
+           
+    
             return Ok(new { Status = "Success", Message = "User created successfully!" });
         }
 
