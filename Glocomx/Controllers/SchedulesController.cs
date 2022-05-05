@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Glocomx.DTOs.Request;
 using Glocomx.DTOs.Response;
 using Glocomx.Models;
 using Microsoft.AspNetCore.Http;
@@ -46,7 +48,6 @@ namespace Glocomx.Controllers
             {
                 Id = schedule.Id,
                 Title = schedule.Title,
-                LiveSessionId = schedule.LiveSessionId,
                 StartTime = schedule.StartTime,
                 EndTime = schedule.EndTime,
                 Description = schedule.Description,
@@ -96,7 +97,7 @@ namespace Glocomx.Controllers
 
         // POST: api/Schedules
         [HttpPost]
-        public async Task<ActionResult<Schedule>> PostSchedule(Schedule schedule)
+        public async Task<ActionResult<Schedule>> PostSchedule([FromForm] ScheduleDTO schedule)
         {
 
             string dbFilePath = "";
@@ -126,8 +127,20 @@ namespace Glocomx.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
 
-            schedule.Thumbnail = dbFilePath;
-            _context.Schedules.Add(schedule);
+            var jsonTags = JsonSerializer.Deserialize<ICollection<Tags>>(schedule.Tags);
+            
+            Schedule newSchedule = new Schedule {
+                Title = schedule.Title,
+                Thumbnail = dbFilePath,
+                Description = schedule.Description,
+                StartTime = schedule.StartTime,
+                EndTime = schedule.EndTime,
+                HostId = schedule.HostId,
+                Tags = jsonTags
+            };
+
+
+            _context.Schedules.Add(newSchedule);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetSchedule", new { id = schedule.Id }, schedule);
