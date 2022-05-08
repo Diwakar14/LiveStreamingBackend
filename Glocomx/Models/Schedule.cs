@@ -8,6 +8,7 @@ namespace Glocomx.Models
     public class Schedule
     {
         public int Id { get; set; }
+        public string LiveSessionId { get; set; }
         public string Title { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
@@ -20,6 +21,7 @@ namespace Glocomx.Models
         public Schedule()
         {
             this.Tags = new List<Tags>();
+            LiveSessionId = Guid.NewGuid().ToString();
         }
     }
 }
