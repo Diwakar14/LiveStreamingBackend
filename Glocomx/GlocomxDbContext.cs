@@ -12,6 +12,7 @@ namespace Glocomx
     {
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Chat> Chats { get; set; }
+        public DbSet<Tags> Tags { get; set; }
 
         public GlocomxDbContext(DbContextOptions<GlocomxDbContext> options) : base(options)
         {
@@ -20,6 +21,7 @@ namespace Glocomx
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            
             base.OnModelCreating(builder);
         }
 

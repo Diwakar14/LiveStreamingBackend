@@ -29,7 +29,13 @@ namespace Glocomx.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedules()
         {
+            string hostId = Request.Query["hostId"];
+            if(hostId != null)
+            {
+                return await _context.Schedules.Include(tags => tags.Tags).Where(sc => sc.HostId == hostId).ToListAsync();
+            }
             return await _context.Schedules.Include(tags => tags.Tags).ToListAsync();
+
         }
 
         // GET: api/Schedules/5
@@ -51,6 +57,7 @@ namespace Glocomx.Controllers
                 StartTime = schedule.StartTime,
                 EndTime = schedule.EndTime,
                 Description = schedule.Description,
+                Thumbnail = schedule.Thumbnail,
                 Tags = schedule.Tags,
                 Host = new UserResponseDTO
                 {
@@ -150,14 +157,18 @@ namespace Glocomx.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSchedule(int id)
         {
-            var schedule = await _context.Schedules.FindAsync(id);
+            var schedule = await _context.Schedules.Include(t => t.Tags).FirstOrDefaultAsync(t => t.Id == id);
+            var tags = schedule.Tags;
+
             if (schedule == null)
             {
                 return NotFound();
             }
 
+            _context.Tags.RemoveRange(schedule.Tags);
             _context.Schedules.Remove(schedule);
             await _context.SaveChangesAsync();
+
 
             return NoContent();
         }

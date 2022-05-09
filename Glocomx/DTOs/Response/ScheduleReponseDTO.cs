@@ -14,6 +14,7 @@ namespace Glocomx.DTOs.Response
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public string Description { get; set; }
+        public string Thumbnail { get; set; }
         public ICollection<Tags> Tags { get; set; }
 
         public UserResponseDTO Host { get; set; }
