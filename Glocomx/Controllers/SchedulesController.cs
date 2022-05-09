@@ -62,7 +62,10 @@ namespace Glocomx.Controllers
                 Host = new UserResponseDTO
                 {
                     UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
                     Email = user.Email,
+                    ProfilePic = user.ProfilePic,
                     Id = user.Id
                 }
             };
