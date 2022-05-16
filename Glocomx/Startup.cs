@@ -72,7 +72,7 @@ namespace Glocomx
                 {
                     policy.AllowAnyHeader()
                         .AllowAnyMethod()
-                        .WithOrigins("http://localhost:3000")
+                        .WithOrigins("http://localhost:3000", "https://glocomx-live.azurewebsites.net/")
                         .AllowCredentials();
                 });
             });
