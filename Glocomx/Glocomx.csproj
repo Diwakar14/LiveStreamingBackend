@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>aspnet-Glocomx-4FCD09C6-CC8C-450B-8043-D902533FEF9F</UserSecretsId>
   </PropertyGroup>
 
